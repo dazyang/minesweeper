@@ -1,7 +1,7 @@
 document.addEventListener('DOMContentLoaded', startGame)
 
 // Define your `board` object here!
-var board = {
+/* var board = {
     cells : [
         {hidden: true, row: 0, col: 0, isMine: false, isMarked: false, surroundingMines: 0}, //1
         {hidden: true, row: 1, col: 0, isMine: false, isMarked: false, surroundingMines: 0}, //2
@@ -20,28 +20,48 @@ var board = {
         {hidden: true, row: 2, col: 3, isMine: false, isMarked: false, surroundingMines: 1}, //15
         {hidden: true, row: 3, col: 3, isMine: false, isMarked: false, surroundingMines: 0} //16
     ]
+}; */
 
-    /* This should print out:
-     1 | 5  | 9  | 13
-    -- * -- * -- * --
-     2 | 6  | 10 | 14
-    -- * -- * -- * --
-     3 | 7  | 11 | 15
-    -- * -- * -- * --
-     4 | 8  | 12 | 16  */
+var board = { cells: [] }
+var boardSize = board.cells;
 
-};
+function loadBoard(size){
+  //EJS: To work with two dimensions, you will need a loop inside of a loop.
+  for (var X = 0; X < size; X++ ){
+    for (var Y = 0; Y < size; Y++){
+      var generate = {
+        row: X,
+        col: Y,
+        isMine: Math.floor(Math.random() > 0.9),
+        isMarked: false,
+        hidden: true,
+      }
+      //Previously using board.cells.push() don't work.
+      boardSize.push(generate);
+    }
+  }
+}
+loadBoard(5);
+
+/* 4x4 should print out:
+ 1 | 5  | 9  | 13
+-- * -- * -- * --
+ 2 | 6  | 10 | 14
+-- * -- * -- * --
+ 3 | 7  | 11 | 15
+-- * -- * -- * --
+ 4 | 8  | 12 | 16  */
+
+
 
 function startGame () {
   // Don't remove this function call: it makes the game work!
-
-  for (var i = 0; i < board.cells.length; i++){
-      board.cells[i].surroundingMines = countSurroundingMines(board.cells[i]);
-  }
-
   document.addEventListener('click', checkForWin);
   document.addEventListener('mousedown', checkForWin);
 
+    for (var i = 0; i < boardSize.length; i++){
+        boardSize[i].surroundingMines = countSurroundingMines(boardSize[i]);
+    }
 
   lib.initBoard()
 }
@@ -51,14 +71,15 @@ function startGame () {
 // 1. Are all of the cells that are NOT mines visible?
 // 2. Are all of the mines marked?
 function checkForWin () {
-    for (var j = 0; j < board.cells.length; i++){
-        if (board.cells[j].isMine.isMarked){
-        } else if (board.cells[j].isMine.hidden){
+    for (var j = 0; j < boardSize.length; i++){
+        if ((boardSize[j].isMine) && (boardSize[j].hidden) === true){
+        } else if ((boardSize[j].isMine) && (boardSize[j].isMarked) === true){
         } else {
             return;
         }
     }
-     lib.displayMessage('You win!');
+    lib.displayMessage('You win!');
+
   // You can use this function call to declare a winner (once you've
   // detected that they've won, that is!)
   //   lib.displayMessage('You win!')
